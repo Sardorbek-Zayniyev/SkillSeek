@@ -1,17 +1,23 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkillSeek</title>
+    <link rel="stylesheet" href="{% static 'styles/main.css'%}">
+
 </head>
+<img src="{{images.projects.p1.url}}" alt="">
+
 <body>
     Main project
-    {% include "navbar.html" %} 
+    {% include "navbar.html" %}
     {% block content %}
-    
-    
+
+
     {% endblock content %}
 </body>
+
 </html>
