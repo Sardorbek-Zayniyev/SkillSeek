@@ -8,7 +8,11 @@
 {{project.vote_ratio}}<br>
 {{project.created_at}}<br>
 
-<a href="{% url 'project' project.id %}">View</a><br>
+<a href="{% url 'project' project.id %}">View</a>
+<a href="{% url 'update_project' project.id %}">Edit</a><br>
+
+<a href="{% url 'delete_project' project.id %}">Delete</a><br>
+
 
 {% endfor %}
 {% endblock content %}
