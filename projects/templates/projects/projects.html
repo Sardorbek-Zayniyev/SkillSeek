@@ -2,4 +2,13 @@
 
 {% block content %}
 <h1>Projects</h1>
+{% for project in projects %}
+{{project.title}}<br>
+{{project.vote_total}}<br>
+{{project.vote_ratio}}<br>
+{{project.created_at}}<br>
+
+<a href="{% url 'project' project.id %}">View</a><br>
+
+{% endfor %}
 {% endblock content %}

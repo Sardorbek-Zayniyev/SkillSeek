@@ -1,5 +1,14 @@
 {% extends "main.html" %}
+<h1>Single project</h1>
 
 {% block content %}
-<h1>Single project</h1>
+<h1>{{project.title}}</h1><br>
+<hr>
+{% for tag in project.tags.all %}
+        {{tag}}
+{% endfor %}
+<hr>
+<p>{{projectObj.description}}</p>
+
+
 {% endblock content %}
