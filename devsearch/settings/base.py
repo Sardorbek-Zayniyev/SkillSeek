@@ -1,4 +1,5 @@
 
+from django.contrib.messages import constants as messages
 from pathlib import Path
 from decouple import config
 import os
@@ -95,7 +96,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/images/'
 MEDIA_ROOT = 'static/images/projects'
 
@@ -103,3 +104,12 @@ MEDIA_ROOT = 'static/images/projects'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'secondary',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
