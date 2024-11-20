@@ -82,3 +82,16 @@ def user_profile(request, pk):
     except Profile.DoesNotExist:
         messages.error(request, "The requested profile does not exist.")
         return redirect('profiles')
+
+
+@login_required(login_url='login')
+def user_account(request):
+    profile = request.user.profile
+    skills = profile.skill_set.all()
+    projects = profile.project_set.all()
+    context = {
+        'profile': profile,
+        'skills': skills,
+        'projects': projects,
+    }
+    return render(request, 'users/account.html', context)
