@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .models import Profile, User
-
+from .forms import CustomUserCreationForm
 
 
 def login_user(request):
+
+    page = 'login'
 
     if request.user.is_authenticated:
         messages.info(request, "You are already logged in.")
@@ -31,7 +34,7 @@ def login_user(request):
         else:
             messages.error(request, 'Username or password is incorrect.')
 
-    context = {}
+    context = {"page": page}
     return render(request, 'users/login-register.html', context)
 
 
@@ -39,6 +42,23 @@ def logout_user(request):
     logout(request)
     messages.info(request, "You have been logged out.")
     return redirect('login')
+
+
+def register_user(request):
+    form = CustomUserCreationForm()
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.capitalize()
+            user.save()
+            messages.success(
+                request, f' {user.username}, account has been created successfully!')
+            return redirect('login')
+        else:
+            messages.error(request, '???????????????????ERROR')
+    context = {"form": form}
+    return render(request, 'users/login-register.html', context)
 
 
 def profiles(request):
