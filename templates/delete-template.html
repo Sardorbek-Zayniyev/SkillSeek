@@ -1,0 +1,27 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+    
+</form>
+
+    <!-- Main Section -->
+    <main class="formPage my-xl">
+        <div class="content-box">
+            <div class="formWrapper">
+                <br>
+
+                <form class="form" action='' method="POST">
+                        {% csrf_token %}
+                        <p>Are you sure delete {{obj}} &nbsp;?</p>
+
+                        <a class="btn btn--sub btn--lg  my-md" onclick='window.history.back(); return false;' ><i class="fa fa-angle-left">&nbsp; &nbsp;</i>Go Back</a>
+                    <input class="btn btn--sub btn--lg  my-md" type="submit" value="Confirm" />
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
+{% endblock content %}
