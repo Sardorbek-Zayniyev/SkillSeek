@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
+
 from .models import Profile, User, Skill
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 
@@ -62,8 +64,23 @@ def register_user(request):
 
 
 def profiles(request):
-    profiles = Profile.objects.all()
-    context = {'profiles': profiles}
+    search_query = ''
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+
+    skills = Skill.objects.filter(name__icontains=search_query)
+
+    profiles = Profile.objects.distinct().filter(
+        Q(name__icontains=search_query) |
+        Q(short_intro__icontains=search_query) |
+        Q(skill__in=skills)
+
+    )
+    context = {
+        'profiles': profiles,
+        'search_query': search_query
+    }
     return render(request, 'users/profiles.html', context)
 
 
@@ -106,8 +123,9 @@ def edit_account(request):
         if form.is_valid():
             form.save()
             return redirect('account')
-        messages.success(request, f'The profile "{profile}" is updated successfully!')
-        
+        messages.success(request, f'The profile "{
+                         profile}" is updated successfully!')
+
     context = {
         'form': form
     }
@@ -123,7 +141,8 @@ def create_skill(request):
             skill = form.save(commit=False)
             skill.owner = profile
             skill.save()
-            messages.success(request, f'The skill "{skill}" is created successfully!')
+            messages.success(request, f'The skill "{
+                             skill}" is created successfully!')
             return redirect('account')
     else:
         form = SkillForm()
@@ -141,7 +160,8 @@ def edit_skill(request, pk):
         form = SkillForm(request.POST, instance=skill)
         if form.is_valid():
             form.save()
-            messages.success(request, f'The skill "{skill}" is updated successfully!')
+            messages.success(request, f'The skill "{
+                             skill}" is updated successfully!')
             return redirect('account')
     else:
         form = SkillForm(instance=skill)
@@ -155,9 +175,10 @@ def edit_skill(request, pk):
 def delete_skill(request, pk):
     profile = request.user.profile
     skill = profile.skill_set.get(id=pk)
-    if request.method == "POST":  
-        skill_name = skill.name  
-        skill.delete() 
-        messages.success(request, f'The skill "{skill_name}" has been deleted successfully!')  
+    if request.method == "POST":
+        skill_name = skill.name
+        skill.delete()
+        messages.success(request, f'The skill "{
+                         skill_name}" has been deleted successfully!')
         return redirect('account')
     return render(request, 'delete-template.html', {'obj': skill})
