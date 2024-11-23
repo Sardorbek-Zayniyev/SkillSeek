@@ -17,7 +17,7 @@ def login_user(request):
         return redirect('profiles')
 
     if request.method == "POST":
-        username = request.POST['username']
+        username = request.POST['username'].capitalize()
         password = request.POST['password']
 
         try:
@@ -31,7 +31,7 @@ def login_user(request):
         if user is not None:
             login(request, user)
             messages.success(request, f'Welcome back, {user.username}!')
-            return redirect('profiles')
+            return redirect(request.GET['next'] if 'next' in request.GET else 'account')
         else:
             messages.error(request, 'Username or password is incorrect.')
 
@@ -67,7 +67,7 @@ def profiles(request):
 
     profiles, search_query = search_profiles(request)
 
-    custom_range, profiles = paginate_profiles(request, profiles, 1)
+    custom_range, profiles = paginate_profiles(request, profiles, 6)
 
     context = {
         'profiles': profiles,
