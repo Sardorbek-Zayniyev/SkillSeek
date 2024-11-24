@@ -1,5 +1,7 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.core.exceptions import ObjectDoesNotExist
+
 from .models import User, Profile
 
 
@@ -26,5 +28,9 @@ def create_or_update_profile(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=Profile)
 def deleting_user(sender, instance, **kwargs):
-    if instance.user:
-        instance.user.delete()
+    try:
+        if instance.user and not hasattr(instance, '_user_deleted'):
+            instance._user_deleted = True
+            instance.user.delete()
+    except ObjectDoesNotExist:
+        pass
