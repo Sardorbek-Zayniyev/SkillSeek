@@ -24,15 +24,15 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        #updating user
-        if self.user:
-            self.user.username = self.username
-            self.user.email = self.email
-            self.user.first_name = self.name
-            self.user.save()
-        super().save(*args, **kwargs)
-
-
+        if not hasattr(self, '_user_updated'):
+            self._user_updated = True
+            # updating user
+            if self.user:
+                self.user.username = self.username
+                self.user.email = self.email
+                self.user.first_name = self.name
+                self.user.save()
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return self.user.username

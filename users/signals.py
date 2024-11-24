@@ -4,8 +4,8 @@ from .models import User, Profile
 
 
 @receiver(post_save, sender=User)
-def create_profile_or_update_user(sender, instance, created, **kwargs):
-    # profile creation
+def create_or_update_profile(sender, instance, created, **kwargs):
+    # creating profile
     if created:
         Profile.objects.create(
             user=instance,
@@ -13,11 +13,18 @@ def create_profile_or_update_user(sender, instance, created, **kwargs):
             email=instance.email,
             name=instance.first_name,
         )
-    # updating user
+    #  updating profile
     else:
-        instance.profile.save()
+        if not hasattr(instance, '_profile_updated'):
+            instance._profile_updated = True
+            profile = instance.profile
+            profile.username = instance.username
+            profile.email = instance.email
+            profile.name = instance.first_name
+            profile.save()
 
 
 @receiver(post_delete, sender=Profile)
 def deleting_user(sender, instance, **kwargs):
-    instance.delete()
+    if instance.user:
+        instance.user.delete()
