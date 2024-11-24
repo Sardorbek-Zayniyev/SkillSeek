@@ -17,7 +17,7 @@ def login_user(request):
         return redirect('profiles')
 
     if request.method == "POST":
-        username = request.POST['username'].capitalize()
+        username = request.POST['username'].lower()
         password = request.POST['password']
 
         try:
@@ -51,7 +51,7 @@ def register_user(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.username = user.username.capitalize()
+            user.username = user.username.lower()
             user.save()
             messages.success(
                 request, f' {user.username} your account has been created successfully!')
@@ -176,3 +176,11 @@ def delete_skill(request, pk):
                          skill_name}" has been deleted successfully!')
         return redirect('account')
     return render(request, 'delete-template.html', {'obj': skill})
+
+
+@login_required(login_url='login')
+def inbox(request):
+    context = {
+
+    }
+    return render(request, 'users/inbox.html', context)

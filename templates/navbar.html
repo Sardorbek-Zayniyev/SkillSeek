@@ -16,12 +16,27 @@
         <ul class="header__menu">
           <li class="header__menuItem"><a href="{% url 'profiles' %}">Developers</a></li>
           <li class="header__menuItem"><a href="{% url 'projects' %}">Projects</a></li>
-          <li class="header__menuItem"><a href="">Inbox</a></li>
-            {% if request.user.is_authenticated %}
+          {% if request.user.is_authenticated %}
+          <li class="header__menuItem"><a href="{% url "inbox" %}">Inbox</a></li>
+          {% endif %}
+          {% if request.user.is_authenticated %}
           <li class="header__menuItem"><a href="{% url "account" %}">My Account</a></li>
-          <li class="header__menuItem"><a href="{% url 'logout' %}" class="btn btn--sub">Logout</a></li>
+          <li class="">
+            <a href="{% url 'logout' %}" class="btn btn--sub" style="padding: 7px 15px; background-color: #dc3545; color: white; border-radius: 5px; text-decoration: none; margin-right: 15px;">
+              Logout
+            </a>
+          </li>
+
             {% else %}
-          <li class="header__menuItem"><a href="{% url 'login' %}" class="btn btn--sub">Login/Sign Up</a></li>
+          <li>
+            <a href="{% url 'login' %}" class="btn btn--sub" style="margin-right: 3px; padding: 7px 20px; background-color: #007bff; color: #fff; border-radius: 5px; text-decoration: none;">
+              Login
+            </a>
+            <a href="{% url 'register' %}" class="btn btn--sub" style="padding: 7px 20px; background-color: #28a745; color: #fff; border-radius: 5px; text-decoration: none;">
+              Sign Up
+            </a>
+          </li>
+
             {% endif %}
         </ul>
       </nav>

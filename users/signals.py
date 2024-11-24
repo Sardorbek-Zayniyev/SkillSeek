@@ -4,29 +4,20 @@ from .models import User, Profile
 
 
 @receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
+def create_profile_or_update_user(sender, instance, created, **kwargs):
+    # profile creation
     if created:
-        user = instance
-        profile = Profile.objects.create(
-            user=user,
-            username=user.username,
-            email=user.email,
-            name=user.first_name,
+        Profile.objects.create(
+            user=instance,
+            username=instance.username,
+            email=instance.email,
+            name=instance.first_name,
         )
-
-
-@receiver(post_save, sender=Profile)
-def update_user(sender, instance, created, **kwargs):
-    profile = instance
-    user = profile.user
-    if created == False:
-        user.first_name = profile.name
-        user.username = profile.username
-        user.email = profile.email
-        user.save()
+    # updating user
+    else:
+        instance.profile.save()
 
 
 @receiver(post_delete, sender=Profile)
 def deleting_user(sender, instance, **kwargs):
-    user = instance.user
-    user.delete()
+    instance.delete()
