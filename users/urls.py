@@ -15,5 +15,6 @@ urlpatterns = [
     path('delete-skill/<str:pk>/', views.delete_skill, name='delete_skill'),
 
     path('inbox/', views.inbox, name='inbox'),
-
+    path('message/<str:pk>/', views.view_message, name='view_message'),
+    path('create-message/<str:pk>/', views.create_message, name='create_message'),
 ]
