@@ -3,6 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+
 from .utils import search_profiles, paginate_profiles
 from .models import Profile, User
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm, MessageForm
