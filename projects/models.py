@@ -10,7 +10,7 @@ class Project(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
     owner = models.ForeignKey(
-        Profile, on_delete=models.SET_NULL, null=True, blank=True)
+        Profile, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField(
         null=True, blank=True)
@@ -25,7 +25,15 @@ class Project(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-vote_ratio', '-vote_total']
+        ordering = ['-vote_ratio', '-vote_total', 'title']
+
+    @property
+    def image_url(self):
+        try:
+            url = self.featured_image.url
+        except:
+            url = ''
+        return url
 
     @property
     def reviewers(self):
@@ -73,6 +81,11 @@ class Tag(models.Model):
                           primary_key=True, editable=False)
     name = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.name:
+            self.name = self.name.lower()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

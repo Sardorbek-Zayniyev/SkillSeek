@@ -23,6 +23,17 @@ class Profile(models.Model):
     social_website = models.CharField(max_length=200, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['created_at']
+
+    @property
+    def image_url(self):
+        try:
+            url = self.profile_image.url
+        except:
+            url = ''
+        return url
+
     def save(self, *args, **kwargs):
         if not hasattr(self, '_user_updated'):
             self._user_updated = True

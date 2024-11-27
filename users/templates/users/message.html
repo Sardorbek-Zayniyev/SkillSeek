@@ -12,7 +12,9 @@
         {% if message.sender %}
         <a href="{% url 'user_profile' message.sender.id  %}" class="message__author">{{message.name}}</a>
         {% else %}
-        <p class="message__author">{{message.name}}</p>
+        {% if message.sender %}
+        <a href="{% url "user-profile" message.sender.id %}"><p class="message__author">{{message.name}}</p></a>
+        {% endif %}
         {% endif %}
         <p class="message__date">{{message.created}}</p>
         <div class="message__body">{{message.body|linebreaksbr}}</div>

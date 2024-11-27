@@ -1,7 +1,7 @@
 from django.db.models import Q
 from .models import Project, Tag
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
+import re
 
 def search_projects(request):
     search_query = ''
@@ -45,3 +45,10 @@ def paginate_projects(request, projects, results):
 
     custom_range = range(left_index, right_index)
     return custom_range, projects
+
+
+
+def clean_tags(new_tags):
+    cleaned_tags = re.sub(r'[^\w\s]', ' ', new_tags)
+    new_tags = cleaned_tags.split()
+    return new_tags
