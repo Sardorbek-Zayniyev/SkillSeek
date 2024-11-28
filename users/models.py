@@ -1,12 +1,14 @@
 from django.db import models
 import uuid
 from django.contrib.auth.models import User
+
 # Create your models here.
 
 
 class Profile(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, unique=True,
-                          primary_key=True, editable=False)
+    id = models.UUIDField(
+        default=uuid.uuid4, unique=True, primary_key=True, editable=False
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=200, null=True, blank=True)
     username = models.CharField(max_length=200, null=True, blank=True)
@@ -15,7 +17,11 @@ class Profile(models.Model):
     short_intro = models.CharField(max_length=200, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     profile_image = models.ImageField(
-        null=True, blank=True, upload_to='profiles/', default='profiles/user-default.jpg')
+        null=True,
+        blank=True,
+        upload_to="profiles/",
+        default="profiles/user-default.jpg",
+    )
     social_github = models.CharField(max_length=200, null=True, blank=True)
     social_twitter = models.CharField(max_length=200, null=True, blank=True)
     social_linkedin = models.CharField(max_length=200, null=True, blank=True)
@@ -24,18 +30,18 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['created_at']
+        ordering = ["created_at"]
 
     @property
     def image_url(self):
         try:
             url = self.profile_image.url
         except:
-            url = ''
+            url = ""
         return url
 
     def save(self, *args, **kwargs):
-        if not hasattr(self, '_user_updated'):
+        if not hasattr(self, "_user_updated"):
             self._user_updated = True
             # updating user
             if self.user:
@@ -50,10 +56,10 @@ class Profile(models.Model):
 
 
 class Skill(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, unique=True,
-                          primary_key=True, editable=False)
-    owner = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, null=True, blank=True)
+    id = models.UUIDField(
+        default=uuid.uuid4, unique=True, primary_key=True, editable=False
+    )
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -63,12 +69,19 @@ class Skill(models.Model):
 
 
 class Message(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, unique=True,
-                          primary_key=True, editable=False)
+    id = models.UUIDField(
+        default=uuid.uuid4, unique=True, primary_key=True, editable=False
+    )
     sender = models.ForeignKey(
-        Profile, on_delete=models.SET_NULL, null=True, blank=True)
+        Profile, on_delete=models.SET_NULL, null=True, blank=True
+    )
     recipient = models.ForeignKey(
-        Profile, on_delete=models.SET_NULL, null=True, blank=True, related_name='messages')
+        Profile,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="messages",
+    )
     name = models.CharField(max_length=200, null=True, blank=True)
     email = models.EmailField(max_length=200, null=True, blank=True)
     subject = models.CharField(max_length=200, null=True, blank=True)
@@ -77,7 +90,7 @@ class Message(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['is_read', '-created_at']
+        ordering = ["is_read", "-created_at"]
 
     def __str__(self):
         return self.subject

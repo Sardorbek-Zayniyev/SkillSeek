@@ -17,9 +17,9 @@ def create_or_update_profile(sender, instance, created, **kwargs):
             email=instance.email,
             name=instance.first_name,
         )
-        #sending eMail
-        subject = 'Welcome to SkillSeek'
-        message = 'We are glad you are here!'
+        # sending eMail
+        subject = "Welcome to SkillSeek"
+        message = "We are glad you are here!"
         send_mail(
             subject,
             message,
@@ -30,7 +30,7 @@ def create_or_update_profile(sender, instance, created, **kwargs):
 
     #  updating profile
     else:
-        if not hasattr(instance, '_profile_updated'):
+        if not hasattr(instance, "_profile_updated"):
             instance._profile_updated = True
             profile = instance.profile
             profile.username = instance.username
@@ -42,7 +42,7 @@ def create_or_update_profile(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Profile)
 def deleting_user(sender, instance, **kwargs):
     try:
-        if instance.user and not hasattr(instance, '_user_deleted'):
+        if instance.user and not hasattr(instance, "_user_deleted"):
             instance._user_deleted = True
             instance.user.delete()
     except ObjectDoesNotExist:

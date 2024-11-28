@@ -1,21 +1,21 @@
 from django.db import models
 import uuid
+
 # from django.contrib.auth.models import User
 from users.models import Profile
+
 # Create your models here.
 
 
 class Project(models.Model):
 
-    id = models.UUIDField(default=uuid.uuid4, unique=True,
-                          primary_key=True, editable=False)
-    owner = models.ForeignKey(
-        Profile, on_delete=models.CASCADE)
+    id = models.UUIDField(
+        default=uuid.uuid4, unique=True, primary_key=True, editable=False
+    )
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    description = models.TextField(
-        null=True, blank=True)
-    featured_image = models.ImageField(
-        null=True, blank=True, default='default.jpg')
+    description = models.TextField(null=True, blank=True)
+    featured_image = models.ImageField(null=True, blank=True, default="default.jpg")
     demo_link = models.CharField(max_length=2000, null=True, blank=True)
     source_link = models.CharField(max_length=2000, null=True, blank=True)
     tags = models.ManyToManyField("Tag", blank=True)
@@ -25,25 +25,25 @@ class Project(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-vote_ratio', '-vote_total', 'title']
+        ordering = ["-vote_ratio", "-vote_total", "title"]
 
     @property
     def image_url(self):
         try:
             url = self.featured_image.url
         except:
-            url = ''
+            url = ""
         return url
 
     @property
     def reviewers(self):
-        queryset = self.review_set.all().values_list('owner__id', flat=True)
+        queryset = self.review_set.all().values_list("owner__id", flat=True)
         return queryset
 
     @property
     def get_vote_count(self):
         reviews = self.review_set.all()
-        up_votes = reviews.filter(value='up').count()
+        up_votes = reviews.filter(value="up").count()
         total_votes = reviews.count()
 
         ratio = (up_votes / total_votes) * 100
@@ -57,12 +57,13 @@ class Project(models.Model):
 
 class Review(models.Model):
     VOTE_TYPE = (
-        ('up', 'Up Vote'),
-        ('down', 'Down Vote'),
+        ("up", "Up Vote"),
+        ("down", "Down Vote"),
     )
 
-    id = models.UUIDField(default=uuid.uuid4, unique=True,
-                          primary_key=True, editable=False)
+    id = models.UUIDField(
+        default=uuid.uuid4, unique=True, primary_key=True, editable=False
+    )
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     body = models.TextField(null=True, blank=True)
@@ -70,15 +71,16 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ['owner', 'project']
+        unique_together = ["owner", "project"]
 
     def __str__(self):
         return self.value
 
 
 class Tag(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, unique=True,
-                          primary_key=True, editable=False)
+    id = models.UUIDField(
+        default=uuid.uuid4, unique=True, primary_key=True, editable=False
+    )
     name = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
 
